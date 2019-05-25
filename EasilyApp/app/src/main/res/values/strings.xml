@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">EasilyApp</string>
+
+    <string-array name="Opcao">
+        <item> Aluno </item>
+        <item> Professor </item>
+
+
+    </string-array>
+</resources>
