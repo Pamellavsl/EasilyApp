@@ -102,6 +102,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/backgroung_button_pdf"
         android:text="Gerar PDF"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
