@@ -38,6 +38,7 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        opcao = null;
 
         mEditEmail = findViewById(R.id.edit_email_cadastro);
         mEditPassword = findViewById(R.id.edit_senha_cadastro);
@@ -100,9 +101,10 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
         String matricula = mMatricula.getText().toString();
         String email = mEditEmail.getText().toString();
         String senha = mEditPassword.getText().toString();
+        String tipoUser = opcao;
 
-        User usuario = new User(username, matricula, email, senha);
-        usuario.tipoUser(opcao); // pega o tipo do usuario
+
+        User usuario = new User(username, matricula, email, senha, opcao);
 
         FirebaseFirestore.getInstance().collection("users")
                 .add(usuario) // escrevendo dados no database
@@ -110,6 +112,7 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.i("Sucesso", documentReference.getId());
+                        //new Intent(CreateAccountActivity.this,)
 
                     }
                 })
@@ -125,7 +128,7 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String opcao = parent.getItemAtPosition(position).toString();
+        opcao = parent.getItemAtPosition(position).toString();
         Toast.makeText(parent.getContext(), opcao, Toast.LENGTH_SHORT).show();
 
     }

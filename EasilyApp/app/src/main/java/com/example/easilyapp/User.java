@@ -8,16 +8,18 @@ public class User {
     private String matricula;
     private String eMail;
     private String senha;
-    private final int quantDigitosProf = 7;
-    private final int quantDigitosAluno = 12;
     private String tipoUser;
 
-
-    public User(String username, String matricula, String eMail, String senha) {
+    public User(String username, String matricula, String eMail, String senha, String tipoUser) {
         this.username = username;
         this.matricula = matricula;
         this.eMail = eMail;
         this.senha = senha;
+        this.tipoUser = tipoUser;
+    }
+
+    public User() {
+
     }
 
     public String getUsername() {
@@ -52,8 +54,28 @@ public class User {
         this.senha = senha;
     }
 
-    public void tipoUser(String tipoUser) {
-        this.tipoUser = tipoUser;
 
+    public String getTipoUser() {
+        return tipoUser;
+    }
+
+    public void setTipoUser(String tipoUser) {
+        this.tipoUser = tipoUser;
+    }
+
+    public static String Usuario(String matricula){
+        int quantDigitosProf = 7;
+        int quantDigitosAluno = 12;
+
+        if (matricula.toCharArray().length == quantDigitosAluno) {
+            return "Aluno";
+        }
+
+        else if (matricula.toCharArray().length == quantDigitosProf) {
+
+            return "Professor";
+        }
+
+        return "Erro";
     }
 }
