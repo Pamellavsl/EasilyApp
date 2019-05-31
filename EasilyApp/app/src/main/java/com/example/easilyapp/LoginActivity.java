@@ -24,14 +24,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         opcao = null;
-
-        spinner = findViewById(R.id.spinner2);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Opcao, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-
-
+        
        mTextView = findViewById(R.id.textCreateAccount);
        mButtonView = findViewById(R.id.buttonEntrada); //OLHAR/ ATENÇAO
         /*

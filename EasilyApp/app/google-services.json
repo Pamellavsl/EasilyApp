@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "444553338213",
+    "firebase_url": "https://easilyfirebase-pamellalima.firebaseio.com",
+    "project_id": "easilyfirebase-pamellalima",
+    "storage_bucket": "easilyfirebase-pamellalima.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444553338213:android:ad326db134f48408",
+        "android_client_info": {
+          "package_name": "com.example.easilyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444553338213-deetub738urmbl3ia0t1v2f1pr2g6vk2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWgs4yboddHE9NdXkfGyBFWySvllCWvvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444553338213-deetub738urmbl3ia0t1v2f1pr2g6vk2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
