@@ -24,6 +24,9 @@ public class ProfessorActivity extends AppCompatActivity {
                 startActivity(intent); //inicia uma nova acitivity, ou seja, troca de tela
             }
         });
+
+
+
     }
 
 
