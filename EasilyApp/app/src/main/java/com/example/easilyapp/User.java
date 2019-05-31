@@ -2,9 +2,8 @@ package com.example.easilyapp;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User {
 
-    private String uid;
     private String username;
     private String matricula;
     private String eMail;
@@ -14,20 +13,11 @@ public class User implements Serializable {
     private String tipoUser;
 
 
-    public User(String uid, String username, String matricula, String eMail, String senha) {
-        this.uid = uid;
+    public User(String username, String matricula, String eMail, String senha) {
         this.username = username;
         this.matricula = matricula;
         this.eMail = eMail;
         this.senha = senha;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getUsername() {

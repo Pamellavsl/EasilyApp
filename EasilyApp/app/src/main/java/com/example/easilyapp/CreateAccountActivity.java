@@ -13,18 +13,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.UUID;
 
 public class CreateAccountActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -43,10 +39,10 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        mEditEmail = findViewById(R.id.edit_email2);
-        mEditPassword = findViewById(R.id.edit_senha);
-        mNomeCompleto = findViewById(R.id.edit_nome);
-        mMatricula = findViewById(R.id.edit_matricula);
+        mEditEmail = findViewById(R.id.edit_email_cadastro);
+        mEditPassword = findViewById(R.id.edit_senha_cadastro);
+        mNomeCompleto = findViewById(R.id.edit_nome_cadastro);
+        mMatricula = findViewById(R.id.edit_matricula_cadastro);
 
 
         Spinner spinner = findViewById(R.id.spinner);
@@ -60,16 +56,15 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
         mButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CreateAccountActivity.this, LoginActivity.class));
-
                 createUser();
+                finish();
             }
         });
     }
 
     private void createUser() {
         String email = mEditEmail.getText().toString();
-        String senha = mEditEmail.getText().toString();
+        String senha = mEditPassword.getText().toString();
         String nomeCompleto = mNomeCompleto.getText().toString();
         String matricula = mMatricula.getText().toString();
 
@@ -100,13 +95,13 @@ public class CreateAccountActivity extends AppCompatActivity implements AdapterV
     }
 
     private void saveUserInFirebase() {
-        String uid = FirebaseAuth.getInstance().getUid();
+        //String uid = FirebaseAuth.getInstance().getUid();
         String username = mNomeCompleto.getText().toString();
         String matricula = mMatricula.getText().toString();
         String email = mEditEmail.getText().toString();
         String senha = mEditPassword.getText().toString();
 
-        User usuario = new User(uid, username, matricula, email, senha);
+        User usuario = new User(username, matricula, email, senha);
         usuario.tipoUser(opcao); // pega o tipo do usuario
 
         FirebaseFirestore.getInstance().collection("users")

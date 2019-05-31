@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <EditText
-        android:id="@+id/edit_nome"
+        android:id="@+id/edit_nome_cadastro"
         android:layout_width="310dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -58,10 +58,10 @@
         android:textColor="#FC000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nome" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_nome_cadastro" />
 
     <EditText
-        android:id="@+id/edit_matricula"
+        android:id="@+id/edit_matricula_cadastro"
         android:layout_width="310dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -86,10 +86,10 @@
         android:textColor="#070707"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_matricula" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_matricula_cadastro" />
 
     <EditText
-        android:id="@+id/edit_email2"
+        android:id="@+id/edit_email_cadastro"
         android:layout_width="310dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -114,7 +114,7 @@
         android:textColor="#020202"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email2" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_email_cadastro" />
 
     <TextView
         android:id="@+id/textView7"
@@ -128,7 +128,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_senha_cadastro" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -160,7 +160,7 @@
         app:layout_constraintVertical_bias="0.089" />
 
     <EditText
-        android:id="@+id/edit_senha"
+        android:id="@+id/edit_senha_cadastro"
         android:layout_width="310dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
