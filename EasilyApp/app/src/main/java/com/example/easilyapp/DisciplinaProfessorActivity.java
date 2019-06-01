@@ -39,23 +39,25 @@ public class DisciplinaProfessorActivity extends AppCompatActivity{
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Codigo codigoAleatorio = new Codigo(codigoAleatorio(6));
+                Codigo code = new Codigo(codigoAleatorio(6));
 
                 FirebaseFirestore.getInstance().collection("codigos")
-                        .add(codigoAleatorio)
+                        .add(code)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-                                Log.i("Sucesso", codigoAleatorio.getCodigo());
-                                AlertDialog alertDialog = showDialog(codigoAleatorio.getCodigo()); //janela aparecera quando o constraintLayout for clicado
+                                Log.i("Sucesso", code.getCodigo());
+                                AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
                                 alertDialog.show(); // faz com que a janela apareça na tela
+                                MyTask myTask = new MyTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
+                                myTask.execute();
 
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.i("Falha", codigoAleatorio.getCodigo());
+                                Log.i("Falha", code.getCodigo());
 
                             }
                         });
@@ -65,21 +67,13 @@ public class DisciplinaProfessorActivity extends AppCompatActivity{
 
     }
 
-    public AlertDialog showDialog(String mensagem) { //criaçao da janela
+    public AlertDialog showDialog(String codigo) { //criaçao da janela
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Codigo").setMessage(mensagem)
+        builder.setTitle("Codigo").setMessage(codigo)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //new Handler().post(DisciplinaProfessorActivity.this);
-                CounterRunnable runnable = new CounterRunnable(seconds, maxSeconds, DisciplinaProfessorActivity.this);
-                runnable.getInsideThread().start();
-            }
-        })
-        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
             }
         });
 
@@ -100,5 +94,5 @@ public class DisciplinaProfessorActivity extends AppCompatActivity{
 
         return stringBuffer.toString();
     }
-    
+
 }
