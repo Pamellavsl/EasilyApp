@@ -8,6 +8,11 @@ public class Codigo {
         this.codigo = codigo;
     }
 
+    public Codigo() {
+
+    }
+
+
     public String getCodigo() {
         return codigo;
     }

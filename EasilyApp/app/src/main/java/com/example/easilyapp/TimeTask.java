@@ -6,24 +6,24 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MyTask extends AsyncTask<Void, Void, Void> {
+public class TimeTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
-    private String code;
-    private String path;
     private AlertDialog alertDialog;
     private int seconds;
     private final int maxSeconds = 60;
+    private final String path = "/codigos";
+    private final String referenceDocument = "path_code";
 
 
-    public MyTask(Activity activity, String code, String path, AlertDialog alertDialog) {
+    public TimeTask(Activity activity, AlertDialog alertDialog) {
         this.activity = activity;
-        this.code = code;
-        this.path = path;
         this.alertDialog = alertDialog;
         seconds = 0;
     }
@@ -43,11 +43,11 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             runnable.getInsideThread().join();
 
             FirebaseFirestore.getInstance().collection(path)
-                    .document(code).delete()
+                    .document(referenceDocument).delete()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d("Deletado", code);
+                            Log.i("Deletado", aVoid.toString());
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

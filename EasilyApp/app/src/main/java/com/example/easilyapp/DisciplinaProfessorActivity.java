@@ -1,7 +1,6 @@
 package com.example.easilyapp;
 
 import android.content.DialogInterface;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -10,21 +9,24 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Random;
 
-public class DisciplinaProfessorActivity extends AppCompatActivity{
+public class DisciplinaProfessorActivity extends AppCompatActivity {
 
     private Button mButtonView;
     //private TextView mTextTimer;
     private int seconds;
     private final int maxSeconds = 59;
+    private final String path = "/codigos";
+    private final String referenceDocument = "path_code";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,28 +42,53 @@ public class DisciplinaProfessorActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Codigo code = new Codigo(codigoAleatorio(6));
+                Log.i("CODE_GENERATE", code.getCodigo());
 
-                FirebaseFirestore.getInstance().collection("codigos")
-                        .add(code)
+                AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
+                alertDialog.show();// faz com que a janela apareça na tela
+
+                FirebaseFirestore.getInstance().collection(path)
+                        .document(referenceDocument).set(code)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.i("Sucesso", code.getCodigo());
+                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, alertDialog);
+                                timeTask.execute();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+                        /*
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Log.i("Sucesso", code.getCodigo());
                                 AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
                                 alertDialog.show(); // faz com que a janela apareça na tela
-                                MyTask myTask = new MyTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
-                                myTask.execute();
+                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
+                                timeTask.execute();
 
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.i("Falha", code.getCodigo());
+                                Log.i("Falha", code.getCodigo());Log.i("Sucesso", code.getCodigo());
+                                AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
+                                alertDialog.show(); // faz com que a janela apareça na tela
+                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
+                                timeTask.execute();
 
                             }
                         });
-
+                       */
             }
         });
 
@@ -71,23 +98,23 @@ public class DisciplinaProfessorActivity extends AppCompatActivity{
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Codigo").setMessage(codigo)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //new Handler().post(DisciplinaProfessorActivity.this);
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //new Handler().post(DisciplinaProfessorActivity.this);
+                    }
+                });
 
         return builder.create();
     }
 
-    public String codigoAleatorio(int caracteres){
+    public String codigoAleatorio(int caracteres) {
 
         Random rand = new Random();
         char[] letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".toCharArray();
 
 
         StringBuffer stringBuffer = new StringBuffer();
-        for (int i=0; i<caracteres; i++) {
+        for (int i = 0; i < caracteres; i++) {
             int ch = rand.nextInt(letras.length);
             stringBuffer.append(letras[ch]);
         }
