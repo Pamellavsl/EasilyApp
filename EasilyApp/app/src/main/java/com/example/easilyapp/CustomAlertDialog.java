@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-public class MyAlertDialog {
+public class CustomAlertDialog {
 
     private EditText editTextCode;
     private String code;
@@ -21,7 +21,7 @@ public class MyAlertDialog {
         return code;
     }
 
-    public MyAlertDialog() {
+    public CustomAlertDialog() {
     }
 
     public void createDialog(Activity activity) {

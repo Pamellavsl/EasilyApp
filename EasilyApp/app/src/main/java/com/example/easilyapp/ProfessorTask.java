@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class TimeTask extends AsyncTask<Void, Void, Void> {
+public class ProfessorTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
     private AlertDialog alertDialog;
@@ -22,7 +22,7 @@ public class TimeTask extends AsyncTask<Void, Void, Void> {
     private final String referenceDocument = "path_code";
 
 
-    public TimeTask(Activity activity, AlertDialog alertDialog) {
+    public ProfessorTask(Activity activity, AlertDialog alertDialog) {
         this.activity = activity;
         this.alertDialog = alertDialog;
         seconds = 0;

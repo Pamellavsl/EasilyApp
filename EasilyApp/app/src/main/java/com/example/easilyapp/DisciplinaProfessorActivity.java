@@ -10,11 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Random;
@@ -53,8 +50,8 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.i("Sucesso", code.getCodigo());
-                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, alertDialog);
-                                timeTask.execute();
+                                ProfessorTask professorTask = new ProfessorTask(DisciplinaProfessorActivity.this, alertDialog);
+                                professorTask.execute();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -72,7 +69,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                                 Log.i("Sucesso", code.getCodigo());
                                 AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
                                 alertDialog.show(); // faz com que a janela apareça na tela
-                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
+                                ProfessorTask timeTask = new ProfessorTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
                                 timeTask.execute();
 
                             }
@@ -83,7 +80,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                                 Log.i("Falha", code.getCodigo());Log.i("Sucesso", code.getCodigo());
                                 AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
                                 alertDialog.show(); // faz com que a janela apareça na tela
-                                TimeTask timeTask = new TimeTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
+                                ProfessorTask timeTask = new ProfessorTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
                                 timeTask.execute();
 
                             }

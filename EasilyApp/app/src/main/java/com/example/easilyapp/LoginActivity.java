@@ -121,7 +121,10 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                             User user = doc.toObject(User.class);
                             if(doc != null && user.geteMail() != null && user.geteMail().equals(email)) {
                                 if(user.getTipoUser().equalsIgnoreCase("ALUNO")) {
-                                    startActivity(new Intent(getBaseContext(), DisciplinaAlunoActivity.class));
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("name", user.getUsername());
+                                    bundle.putString("registration", user.getMatricula());
+                                    startActivity(new Intent(getBaseContext(), DisciplinaAlunoActivity.class).putExtra("bundle", bundle));
                                     Log.d("entrou aluno", user.getTipoUser());
                                     break;
                                 }

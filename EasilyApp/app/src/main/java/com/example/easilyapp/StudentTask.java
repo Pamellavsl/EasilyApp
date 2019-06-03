@@ -1,28 +1,36 @@
 package com.example.easilyapp;
 
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
-public class CodigoTask extends AsyncTask<Void, Void, Void> {
+public class StudentTask extends AsyncTask<Void, Void, Void> {
 
-    private MyAlertDialog alertDialog;
+    private CustomAlertDialog alertDialog;
     private String code;
+    private String nameStudent;
+    private String registryStudent;
 
-    public CodigoTask(MyAlertDialog alertDialog) {
+    public StudentTask(CustomAlertDialog alertDialog, String nameStudent, String registryStudent) {
         this.alertDialog = alertDialog;
+        this.nameStudent = nameStudent;
+        this.registryStudent = registryStudent;
     }
 
     @Override
@@ -31,6 +39,8 @@ public class CodigoTask extends AsyncTask<Void, Void, Void> {
 
         try {
 
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
             while (alertDialog.getAlertDialog().isShowing()) {
                 Thread.sleep(100);
 
@@ -38,7 +48,7 @@ public class CodigoTask extends AsyncTask<Void, Void, Void> {
             code = alertDialog.getCode();
             Log.i("FINISH_DIALOG", "finish");
 
-            FirebaseFirestore.getInstance().collection("codigos")
+            firestore.collection("codigos")
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -52,6 +62,22 @@ public class CodigoTask extends AsyncTask<Void, Void, Void> {
                                 Codigo codigo = doc.toObject(Codigo.class);
                                 if (doc != null && codigo.getCodigo() != null && codigo.getCodigo().equals(getCode())) {
                                     Log.i("Funcionou", getCode());
+                                    Map<String, Object> mapStudent = new HashMap<>();
+                                    mapStudent.put(registryStudent, nameStudent);
+                                    firestore.collection("presence_students")
+                                            .add(mapStudent)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.i("WRITE_PRESENCE", documentReference.getId());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("EXCEPTION_PRESENCE", e.getMessage(), e);
+                                                }
+                                            });
                                     break;
                                 }
 

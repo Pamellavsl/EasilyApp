@@ -1,45 +1,33 @@
 package com.example.easilyapp;
 
-import android.content.DialogInterface;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 
 public class DisciplinaAlunoActivity extends AppCompatActivity {
 
    private ConstraintLayout constraintLayout;
-   private EditText editTextCode;
-   private String code;
-   private CodigoTask codigoTask;
+   private StudentTask studentTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disciplina_aluno);
 
-
-        //codigoTask = new CodigoTask(alertDialog);
-
         constraintLayout = findViewById(R.id.layout_button_aluno);
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //createDialog();
-                //AlertDialog dialogCode = createDialog();
-                //dialogCode.show();
-                //AlertDialog alertDialog = new MyAlertDialog(DisciplinaAlunoActivity.this).createDialog();
-                MyAlertDialog dialog = new MyAlertDialog();
+                CustomAlertDialog dialog = new CustomAlertDialog();
                 dialog.createDialog(DisciplinaAlunoActivity.this);
                 dialog.getAlertDialog().show();
 
-                codigoTask = new CodigoTask(dialog);
-                codigoTask.execute();
+                Bundle bundle = getIntent().getBundleExtra("bundle");
 
+                studentTask = new StudentTask(dialog, bundle.getString("name"),
+                        bundle.getString("registration"));
+                studentTask.execute();
             }
         });
     }
