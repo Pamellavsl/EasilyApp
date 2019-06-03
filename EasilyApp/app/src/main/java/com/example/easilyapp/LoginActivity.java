@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,22 +29,22 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class LoginActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class LoginActivity extends AppCompatActivity {
 
-    Spinner spinner;
-    String opcao;
     private TextView mTextView;
     private Button mButtonView;
     private EditText mEditEmail;
     private EditText mEditPassword;
+    private ProgressBar progressBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        opcao = null;
 
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
         mTextView = findViewById(R.id.textCreateAccount);
         mButtonView = findViewById(R.id.buttonEntrada);
         mEditEmail = findViewById(R.id.edit_email_login);
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
         mButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 String email = mEditEmail.getText().toString();
                 String password = mEditPassword.getText().toString();
 
@@ -95,17 +97,6 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //opcao = parent.getItemAtPosition(position).toString().toLowerCase();
-        //Toast.makeText(parent.getContext(), opcao, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
     private void fetchUsers(String email) {
         FirebaseFirestore.getInstance().collection("/users")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -126,11 +117,13 @@ public class LoginActivity extends AppCompatActivity implements AdapterView.OnIt
                                     bundle.putString("registration", user.getMatricula());
                                     startActivity(new Intent(getBaseContext(), DisciplinaAlunoActivity.class).putExtra("bundle", bundle));
                                     Log.d("entrou aluno", user.getTipoUser());
+                                    finish();
                                     break;
                                 }
                                 else if(doc != null && user.geteMail() != null && user.getTipoUser().equalsIgnoreCase("PROFESSOR")){
                                     startActivity(new Intent(getBaseContext(), ProfessorActivity.class));
                                     Log.d("entrou professor", user.getTipoUser());
+                                    finish();
                                     break;
                                 }
                             }
