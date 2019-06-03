@@ -18,7 +18,7 @@ public class TimeTask extends AsyncTask<Void, Void, Void> {
     private AlertDialog alertDialog;
     private int seconds;
     private final int maxSeconds = 60;
-    private final String path = "/codigos";
+    private final String path = "codigos";
     private final String referenceDocument = "path_code";
 
 

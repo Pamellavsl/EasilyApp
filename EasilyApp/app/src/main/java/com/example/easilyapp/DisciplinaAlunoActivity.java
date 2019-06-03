@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,7 +16,6 @@ public class DisciplinaAlunoActivity extends AppCompatActivity {
    private EditText editTextCode;
    private String code;
    private CodigoTask codigoTask;
-   private AlertDialogCode alertDialogCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +29,18 @@ public class DisciplinaAlunoActivity extends AppCompatActivity {
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createDialog();
+                //createDialog();
+                //AlertDialog dialogCode = createDialog();
+                //dialogCode.show();
+                //AlertDialog alertDialog = new MyAlertDialog(DisciplinaAlunoActivity.this).createDialog();
+                MyAlertDialog dialog = new MyAlertDialog();
+                dialog.createDialog(DisciplinaAlunoActivity.this);
+                dialog.getAlertDialog().show();
+
+                codigoTask = new CodigoTask(dialog);
                 codigoTask.execute();
+
             }
         });
-
-    }
-
-    public void createDialog() {
-        alertDialogCode = new AlertDialogCode();
-        alertDialogCode.show(getSupportFragmentManager(), "Diolog");
-        codigoTask = new CodigoTask(alertDialogCode);
-
-
     }
 }
