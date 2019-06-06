@@ -17,7 +17,6 @@
         <activity android:name=".DisciplinaProfessorActivity"></activity>
         <activity android:name=".DisciplinaAlunoActivity" />
         <activity android:name=".ProfessorActivity" />
-        <activity android:name=".AlunoActivity" />
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

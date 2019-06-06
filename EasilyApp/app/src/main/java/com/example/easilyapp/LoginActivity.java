@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.mail.internet.InternetAddress;
 
 public class LoginActivity extends AppCompatActivity {
 

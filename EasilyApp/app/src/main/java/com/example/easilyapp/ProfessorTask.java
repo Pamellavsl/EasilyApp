@@ -6,10 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,8 +17,22 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Nullable;
+import javax.mail.Address;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 public class ProfessorTask extends AsyncTask<Void, Void, Void> {
 
@@ -28,6 +40,12 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
     private AlertDialog alertDialog;
     private int seconds;
     private List<String> studentsChecked;
+    private final String userDefaultEmail = "philipelunacc@gmail.com";
+    private final String passwordEmail = "superzon561421";
+    FirebaseFirestore firestore;
+    private String path;
+    private String referenceDocument;
+    private int maxSeconds;
 
 
     public ProfessorTask(Activity activity, AlertDialog alertDialog) {
@@ -38,18 +56,29 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
+    protected void onPreExecute() {
+        firestore = FirebaseFirestore.getInstance();
+        path = "codigos";
+        referenceDocument = "path_code";
+        maxSeconds = 60;
+
+    }
+
+    @Override
     protected Void doInBackground(Void... voids) {
         try {
+            /*
             FirebaseFirestore firestore = FirebaseFirestore.getInstance();
             String path = "codigos";
             String referenceDocument = "path_code";
             int maxSeconds = 60;
-
+            */
             while (alertDialog.isShowing()) {
                 Thread.sleep(100);
             }
 
             List<Student> studentList = generateStudentsOfFirestore();
+            List<String> listIds = new LinkedList<>();
 
             CounterRunnable runnable = new CounterRunnable(seconds, maxSeconds, activity);
             runnable.getInsideThread().start();
@@ -73,6 +102,7 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
 
                                             List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
                                             for (DocumentSnapshot snapshot : snapshots) {
+                                                listIds.add(snapshot.getId());
                                                 if (snapshot != null) {
                                                     Map<String, Object> fieldStudent = snapshot.getData();
 
@@ -89,10 +119,10 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
                                                 }
                                             }
                                             Log.i("SIZE_LIST_CHECKED", String.valueOf(studentsChecked.size()));
+                                            sendEmailWithStudentsChecked(studentsChecked, "philipesoares@cc.ci.ufpb.br");
                                         }
 
                                     });
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -130,6 +160,70 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
                 });
 
         return students;
+    }
+
+
+    private void sendEmailWithStudentsChecked(List<String> students, String addressee){
+        try {
+
+            String bodyEmail = "";
+
+            for (String nameStudent : students){
+                bodyEmail = bodyEmail + nameStudent + "\n";
+            }
+
+            Properties properties = new Properties();
+            properties.put("mail.smtp.host", "smtp.gmail.com");
+            properties.put("mail.smtp.socketFactory.port", "465");
+            properties.put("mail.smpt.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.port", "465");
+
+            Session session = Session.getDefaultInstance(properties,
+                    new Authenticator() {
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(userDefaultEmail, passwordEmail);
+                        }
+                    });
+
+            session.setDebug(true);
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(userDefaultEmail));
+
+            //Address[] addresses = InternetAddress.parse(addressee);
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(addressee));
+            message.setSubject("Lista de Alunos com FALTA");
+
+            BodyPart bodyPart = new MimeBodyPart();
+            bodyPart.setContent(bodyEmail, "text/html");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(bodyPart);
+
+            message.setContent(multipart);
+
+            message.setText(bodyEmail);
+
+            Thread  thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        Transport.send(message);
+                        Log.i("EMAIL_SEND...", message.getSubject());
+
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        } catch (MessagingException e){
+            Log.i("MESSAGE_EXCEPTION", e.getMessage());
+        }
+
     }
 
 }
