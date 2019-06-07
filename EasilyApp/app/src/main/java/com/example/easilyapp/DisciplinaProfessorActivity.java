@@ -14,16 +14,20 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class DisciplinaProfessorActivity extends AppCompatActivity {
 
-    private Button mButtonView;
+    private Button mButtonSendEmail;
     //private TextView mTextTimer;
     private int seconds;
     private final int maxSeconds = 59;
     private final String path = "/codigos";
     private final String referenceDocument = "path_code";
+    private ProfessorTask professorTask;
+    private List<String> listMissingStudents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +35,16 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_disciplina_professor);
         seconds = 1;
 
-        mButtonView = findViewById(R.id.button_pdf);
+        mButtonSendEmail = findViewById(R.id.button_email);
         //mTextTimer = findViewById(R.id.text_show_timer);
+
+        mButtonSendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
 
         ConstraintLayout constraintLayout = findViewById(R.id.layout_button2); // chamar um construtor
         constraintLayout.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +64,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                                 Log.i("Sucesso", code.getCodigo());
                                 ProfessorTask professorTask = new ProfessorTask(DisciplinaProfessorActivity.this, alertDialog);
                                 professorTask.execute();
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
