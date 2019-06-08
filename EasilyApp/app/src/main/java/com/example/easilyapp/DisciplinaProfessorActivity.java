@@ -14,7 +14,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +27,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
     private final String referenceDocument = "path_code";
     private ProfessorTask professorTask;
     private List<String> listMissingStudents;
+    private TaskSendEmail taskSendEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
         mButtonSendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                taskSendEmail.execute();
 
 
             }
@@ -64,6 +65,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                                 Log.i("Sucesso", code.getCodigo());
                                 ProfessorTask professorTask = new ProfessorTask(DisciplinaProfessorActivity.this, alertDialog);
                                 professorTask.execute();
+                                taskSendEmail = new TaskSendEmail(professorTask);
 
                             }
                         })

@@ -18,22 +18,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+
 
 import javax.annotation.Nullable;
-import javax.mail.Address;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 public class ProfessorTask extends AsyncTask<Void, Void, Void> {
 
@@ -41,19 +28,22 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
     private AlertDialog alertDialog;
     private int seconds;
     private List<String> studentsChecked;
-    private final String userDefaultEmail = "pamellavsl@gmail.com";
-    private final String passwordEmail = "32353998";
     FirebaseFirestore firestore;
     private String path;
     private String referenceDocument;
     private int maxSeconds;
+    private List<String> listMissingStudents;
+    private List<Student> studentList;
 
+    public List<String> getListMissingStudents() {
+        return listMissingStudents;
+    }
 
     public ProfessorTask(Activity activity, AlertDialog alertDialog) {
         this.activity = activity;
         this.alertDialog = alertDialog;
         seconds = 0;
-        studentsChecked = new LinkedList<>();
+        listMissingStudents = new LinkedList<>();
     }
 
     @Override
@@ -62,23 +52,20 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
         path = "codigos";
         referenceDocument = "path_code";
         maxSeconds = 60;
+        studentsChecked = new LinkedList<>();
+        studentList = new LinkedList<>();
 
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            /*
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-            String path = "codigos";
-            String referenceDocument = "path_code";
-            int maxSeconds = 60;
-            */
+
             while (alertDialog.isShowing()) {
                 Thread.sleep(100);
             }
 
-            List<Student> studentList = generateStudentsOfFirestore();
+            studentList = generateStudentsOfFirestore();
             List<String> listIds = new LinkedList<>();
 
             CounterRunnable runnable = new CounterRunnable(seconds, maxSeconds, activity);
@@ -120,7 +107,7 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
                                                 }
                                             }
                                             Log.i("SIZE_LIST_CHECKED", String.valueOf(studentsChecked.size()));
-                                            sendEmailWithStudentsChecked(studentsChecked, "philipelunacc@gmail.com");
+                                            missingStudents(studentsChecked, studentList);
                                         }
 
                                     });
@@ -163,92 +150,27 @@ public class ProfessorTask extends AsyncTask<Void, Void, Void> {
         return students;
     }
 
-        public List<String> missingStudents() {
-        List<String> listMissingStudents = new LinkedList<>();
-        List<Student> students = new LinkedList<>();
+    public void missingStudents(List<String> listChecked, List<Student> listStudents) {
 
-        students = generateStudentsOfFirestore();
 
-        for(Student student: students) {
-            for(String matricula: studentsChecked) {
-                if(!student.getMatricula().equals(matricula)) {
+        for(Student student: listStudents) {
+            //Log.i("STUDENTE", student.getNome());
+                if(!listChecked.contains(student.getNome())&& !listMissingStudents.contains(student.getNome())) {
+                    //Log.i("ALUNOS", student.getNome());
                     listMissingStudents.add(student.getNome());
-                }
             }
         }
 
-
+        Log.i("TAMANHO: ", String.valueOf(listMissingStudents.size()));
         Collections.sort(listMissingStudents);
-        return listMissingStudents;
     }
 
 
 
-    private void sendEmailWithStudentsChecked(List<String> students, String addressee){
-        try {
 
-            String bodyEmail = "";
-
-            for (String nameStudent : students){
-                bodyEmail = bodyEmail + nameStudent + "\n";
-            }
-
-            Properties properties = new Properties();
-            properties.put("mail.smtp.host", "smtp.gmail.com");
-            properties.put("mail.smtp.socketFactory.port", "587");
-            properties.put("mail.smpt.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            properties.put("mail.smtp.auth", "true");
-            properties.put("mail.smtp.port", "587");
-            properties.put("mail.smtp.starttls.enable", "true");
-            properties.put("mail.smtp.socketFactory.fallback", "false");
-
-            Session session = Session.getDefaultInstance(properties,
-                    new Authenticator() {
-                        @Override
-                        protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication("pamellavsl@gmail.com", "32353998");
-                        }
-                    });
-
-            session.setDebug(true);
-
-
-
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("pamellavsl@gmail.com"));
-
-            Address[] addresses = InternetAddress.parse("philipelunacc@gmail.com");
-            message.setRecipients(Message.RecipientType.TO, addresses);
-            message.setSubject("Lista de Alunos com FALTA");
-
-            BodyPart bodyPart = new MimeBodyPart();
-            bodyPart.setContent(bodyEmail, "text/html");
-
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(bodyPart);
-
-            message.setContent(multipart);
-
-            message.setText(bodyEmail);
-
-            Thread  thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-
-                        Transport.send(message);
-                        Log.i("EMAIL_SEND...", message.getSubject());
-
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
-        } catch (MessagingException e){
-            Log.i("MESSAGE_EXCEPTION", e.getMessage());
-        }
+    @Override
+    protected void onPostExecute(Void aVoid) {
+       // missingStudents();
 
     }
-
 }
