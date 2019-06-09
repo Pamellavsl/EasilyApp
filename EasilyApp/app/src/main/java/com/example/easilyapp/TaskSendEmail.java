@@ -1,7 +1,11 @@
 package com.example.easilyapp;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Properties;
@@ -24,10 +28,13 @@ import javax.mail.internet.MimeMultipart;
 public class TaskSendEmail extends AsyncTask<Void, Void, Void> {
 
     private ProfessorTask task;
+    private Activity activity;
 
 
-    public TaskSendEmail(ProfessorTask task) {
+    public TaskSendEmail(ProfessorTask task, Activity activity) {
         this.task = task;
+        this.activity = activity;
+
     }
 
     @Override
@@ -45,7 +52,10 @@ public class TaskSendEmail extends AsyncTask<Void, Void, Void> {
                 Log.i("ENTROU NO LOOP", task.getStatus().toString());
             }
             Log.i("ISENT: ", String.valueOf(task.getListMissingStudents().size()));
-            sendEmailWithStudentsChecked(task.getListMissingStudents(), "philipelunacc@gmail.com");
+            sendEmailWithStudentsChecked(task.getListMissingStudents(), "pamellavsl@gmail.com");
+
+
+
 
         }
         catch (InterruptedException e) {
@@ -90,7 +100,7 @@ public class TaskSendEmail extends AsyncTask<Void, Void, Void> {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("pamellavsl@gmail.com"));
 
-            Address[] addresses = InternetAddress.parse("philipelunacc@gmail.com");
+            Address[] addresses = InternetAddress.parse("pamellavsl@gmail.com");
             message.setRecipients(Message.RecipientType.TO, addresses);
             message.setSubject("Lista de Alunos com FALTA");
 
@@ -111,6 +121,8 @@ public class TaskSendEmail extends AsyncTask<Void, Void, Void> {
 
                         Transport.send(message);
                         Log.i("EMAIL_SEND...", message.getSubject());
+
+
 
                     } catch (MessagingException e) {
                         e.printStackTrace();

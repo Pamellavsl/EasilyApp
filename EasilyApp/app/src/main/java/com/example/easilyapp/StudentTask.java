@@ -1,9 +1,11 @@
 package com.example.easilyapp;
 
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,17 +23,22 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import javax.mail.Transport;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 public class StudentTask extends AsyncTask<Void, Void, Void> {
 
     private CustomAlertDialog alertDialog;
     private String code;
     private String nameStudent;
     private String registryStudent;
+    private Activity activity;
 
-    public StudentTask(CustomAlertDialog alertDialog, String nameStudent, String registryStudent) {
+    public StudentTask(CustomAlertDialog alertDialog, String nameStudent, String registryStudent, Activity activity) {
         this.alertDialog = alertDialog;
         this.nameStudent = nameStudent;
         this.registryStudent = registryStudent;
+        this.activity = activity;
+
     }
 
     @Override
@@ -70,17 +77,24 @@ public class StudentTask extends AsyncTask<Void, Void, Void> {
                                                 @Override
                                                 public void onSuccess(DocumentReference documentReference) {
                                                     Log.i("WRITE_PRESENCE", documentReference.getId());
+                                                    Toast.makeText(activity, "Presença confirmada!", Toast.LENGTH_LONG).show();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     Log.e("EXCEPTION_PRESENCE", e.getMessage(), e);
+                                                    Toast.makeText(activity.getBaseContext(), "Erro ao confirmar presença!", Toast.LENGTH_LONG).show();
                                                 }
                                             });
                                     break;
                                 }
 
+                                if(doc!= null && codigo.getCodigo() != null && !codigo.getCodigo().equals(getCode())) {
+                                    Toast.makeText(activity.getBaseContext(), "Codigo invalido!", Toast.LENGTH_LONG).show();
+                                    break;
+
+                                }
                             }
                         }
                     });

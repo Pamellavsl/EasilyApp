@@ -1,6 +1,7 @@
 package com.example.easilyapp;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +32,7 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
     private List<String> listMissingStudents;
     private TaskSendEmail taskSendEmail;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,13 +40,24 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
         seconds = 1;
 
         mButtonSendEmail = findViewById(R.id.button_email);
-        //mTextTimer = findViewById(R.id.text_show_timer);
+
 
         mButtonSendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                taskSendEmail.execute();
 
+                try {
+                    if (professorTask != null && !professorTask.getStatus().equals(AsyncTask.Status.RUNNING) && !professorTask.getStatus().equals(AsyncTask.Status.PENDING)) {
+                        taskSendEmail.execute();
+                        Toast.makeText(DisciplinaProfessorActivity.this, "Enviando email...", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(DisciplinaProfessorActivity.this, "Codigo nao gerado ou tempo inacabado", Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (Exception e) {
+                    Toast.makeText(DisciplinaProfessorActivity.this, "Operaçao negada!", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -63,9 +78,9 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.i("Sucesso", code.getCodigo());
-                                ProfessorTask professorTask = new ProfessorTask(DisciplinaProfessorActivity.this, alertDialog);
+                                professorTask = new ProfessorTask(DisciplinaProfessorActivity.this, alertDialog);
                                 professorTask.execute();
-                                taskSendEmail = new TaskSendEmail(professorTask);
+                                taskSendEmail = new TaskSendEmail(professorTask, DisciplinaProfessorActivity.this);
 
                             }
                         })
@@ -75,32 +90,6 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
 
                             }
                         });
-
-
-                        /*
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.i("Sucesso", code.getCodigo());
-                                AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
-                                alertDialog.show(); // faz com que a janela apareça na tela
-                                ProfessorTask timeTask = new ProfessorTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
-                                timeTask.execute();
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.i("Falha", code.getCodigo());Log.i("Sucesso", code.getCodigo());
-                                AlertDialog alertDialog = showDialog(code.getCodigo()); //janela aparecera quando o constraintLayout for clicado
-                                alertDialog.show(); // faz com que a janela apareça na tela
-                                ProfessorTask timeTask = new ProfessorTask(DisciplinaProfessorActivity.this, code.getCodigo(), "/codigos", alertDialog);
-                                timeTask.execute();
-
-                            }
-                        });
-                       */
             }
         });
 
@@ -133,5 +122,4 @@ public class DisciplinaProfessorActivity extends AppCompatActivity {
 
         return stringBuffer.toString();
     }
-
 }

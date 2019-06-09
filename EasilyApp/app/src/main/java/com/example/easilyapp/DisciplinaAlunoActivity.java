@@ -26,7 +26,7 @@ public class DisciplinaAlunoActivity extends AppCompatActivity {
                 Bundle bundle = getIntent().getBundleExtra("bundle");
 
                 studentTask = new StudentTask(dialog, bundle.getString("name"),
-                        bundle.getString("registration"));
+                        bundle.getString("registration"), DisciplinaAlunoActivity.this);
                 studentTask.execute();
             }
         });
